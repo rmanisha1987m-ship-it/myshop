@@ -1,1 +1,62 @@
-
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Shop Counter — Customer</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F8F7;--card:#fff;--ink:#12232B;--mute:#5A6B72;--line:#D5E2E1;--brand:#0F4C5C;--bi:#fff;--acc:#E9B44C;--ai:#3a2a00;--bad:#B5412B;--ok:#1E7A4F;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0C1A1F;--card:#13272E;--ink:#EAF2F2;--mute:#9FB4B8;--line:#24404A;--brand:#5FB3C4;--bi:#06202A;--bad:#F08A72;--ok:#6BD39D;color-scheme:dark}}
+:root[data-theme=dark]{--bg:#0C1A1F;--card:#13272E;--ink:#EAF2F2;--mute:#9FB4B8;--line:#24404A;--brand:#5FB3C4;--bi:#06202A;--bad:#F08A72;--ok:#6BD39D;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Mukta,system-ui,sans-serif}
+h1,h2,h3{font-family:'Baloo 2',system-ui,sans-serif;line-height:1.15;margin:0 0 .4em}h1{font-size:2rem;font-weight:800}h2{font-size:1.35rem}h3{font-size:1.1rem}
+.wrap{max-width:640px;margin:0 auto;padding:16px 16px 110px}.wrap.wide{max-width:1100px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+.row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+label{display:block;font-weight:600;margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px}
+:is(input,select,textarea,button,a):focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 16px;background:var(--brand);color:var(--bi);cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+.btn.b2{background:var(--acc);color:var(--ai)}.btn.g{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.sm{padding:7px 11px;font-size:.9rem}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.full{width:100%}
+.err{color:var(--bad);font-size:.9rem;min-height:1.3em;margin:4px 0}.mute{color:var(--mute)}
+.pill{display:inline-block;border-radius:99px;padding:2px 10px;font-size:.8rem;font-weight:700;background:var(--line);color:var(--ink)}
+.pill.ok{background:var(--ok);color:var(--bi)}.pill.bad{background:var(--bad);color:var(--bi)}.pill.acc{background:var(--acc);color:var(--ai)}
+.item{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}.item:last-child{border:0}
+.qty{display:flex;align-items:center;gap:8px}.qty button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--brand);background:transparent;color:var(--brand);font-size:1.2rem;font-weight:700;cursor:pointer}.qty button:disabled{opacity:.35}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--brand);color:var(--bi);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;justify-content:space-between;align-items:center;gap:10px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}.stat b{display:block;font:800 1.6rem/1.1 'Baloo 2',system-ui,sans-serif}
+.tabs{display:flex;gap:6px;margin:0 0 12px;overflow-x:auto}.tabs button{font:inherit;font-weight:700;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 16px;cursor:pointer;white-space:nowrap}.tabs .on{background:var(--brand);color:var(--bi);border-color:var(--brand)}
+.code{font:800 2.8rem/1 'Baloo 2',system-ui,sans-serif;letter-spacing:.3em;text-indent:.3em;text-align:center;padding:16px;background:var(--acc);color:var(--ai);border-radius:12px}
+.pay{display:flex;gap:10px;margin-bottom:8px}.pay label{flex:1;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:12px;margin:0;cursor:pointer}.pay input{width:auto;margin-right:8px}
+@media(min-width:900px){.stats{grid-template-columns:repeat(4,1fr)}.ogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;align-items:start}}
+</style></head><body><div id="app"><div class="wrap"><h2>Connecting to shop…</h2><p class="mute">Please wait while the catalogue loads.</p></div></div>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script>
+(()=>{'use strict';
+const firebaseConfig = {
+  apiKey: "AIzaSyCLr7K6Ww7q26mz6I3b7mzZH-vZkXGDwGc",
+  authDomain: "my-project-448e1.firebaseapp.com",
+  databaseURL: "https://my-project-448e1-default-rtdb.firebaseio.com",
+  projectId: "my-project-448e1",
+  storageBucket: "my-project-448e1.firebasestorage.app",
+  messagingSenderId: "58451497814",
+  appId: "1:58451497814:web:2e83ae51d2c70d63237cf7",
+  measurementId: "G-56FG495H2P"
+};
+const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), inr=n=>'₹'+Number(n||0).toLocaleString('en-IN');
+const app=$('#app');let db,auth,products=[],config={name:'My Shop',upi:'',wa:''},cart={},customer=null,pay='UPI',view='welcome',query='',last=null,msg='',busy=false;
+const okName=n=>/^[A-Za-z\u0900-\u097F][A-Za-z\u0900-\u097F .'-]{1,39}$/.test(n), cleanMob=m=>String(m).replace(/\D/g,'').replace(/^(91|0)(?=\d{10}$)/,''), okMob=m=>/^[6-9]\d{9}$/.test(m);
+const lines=()=>Object.keys(cart).map(id=>({p:products.find(x=>String(x.id)===id),q:cart[id]})).filter(x=>x.p&&x.q>0), total=()=>lines().reduce((a,x)=>a+x.p.p*x.q,0), count=()=>lines().reduce((a,x)=>a+x.q,0);
+function fail(t){app.innerHTML=`<div class="wrap"><div class="card"><h2>Setup needed</h2><p>${esc(t)}</p><p class="mute">Open the setup instructions provided with these files, add your Firebase configuration, and reload this page.</p></div></div>`}
+function header(){return `<h1>${esc(config.name)}</h1>`}
+function welcome(){return `<div class="wrap">${header()}<p class="mute">Order from your phone and collect at the counter.</p><div class="card"><h2>Who is ordering?</h2><label>Your name</label><input id="nm" maxlength="40" autocomplete="name"><label>Mobile number</label><input id="mb" inputmode="numeric" maxlength="14" placeholder="10-digit number"><div class="err" id="er"></div><button class="btn full" data-a="start">Start shopping</button></div><p class="mute">Your details are shared with the shop only to prepare your order.</p></div>`}
+function shop(){let L=products.filter(x=>x.n.toLowerCase().includes(query.toLowerCase()));return `<div class="wrap">${header()}<p class="mute">Hello ${esc(customer.n)}. Pick what you need.</p><input id="sq" placeholder="Search items" value="${esc(query)}"><div class="card" style="margin-top:12px">${L.map(x=>{let n=cart[x.id]||0;return `<div class="item"><div><b>${esc(x.n)}</b><div class="mute">${inr(x.p)}</div>${x.s<=0?'<div class="err">Out of stock</div>':x.s<=5?`<div class="err">Only ${x.s} left</div>`:''}</div><div class="qty"><button data-a="dec" data-id="${x.id}" ${n?'':'disabled'}>−</button><span>${n}</span><button data-a="inc" data-id="${x.id}" ${n>=x.s||n>=10?'disabled':''}>+</button></div></div>`}).join('')||'<p class="mute">No items match your search.</p>'}</div>${count()?`<div class="bar"><div><b>${count()} items</b> ${inr(total())}</div><button class="btn b2" data-a="review">Review and pay</button></div>`:''}</div>`}
+function payment(){return `<div class="wrap">${header()}<h2>Your order</h2><div class="card">${lines().map(x=>`<div class="row"><span>${esc(x.p.n)} × ${x.q}</span><b>${inr(x.p.p*x.q)}</b></div>`).join('')}<div class="row" style="margin-top:8px"><b>Total</b><b>${inr(total())}</b></div></div><h3>How will you pay?</h3><div class="pay"><label><input type="radio" name="pm" value="UPI" ${pay==='UPI'?'checked':''}>UPI</label><label><input type="radio" name="pm" value="Cash" ${pay==='Cash'?'checked':''}>Cash</label></div><p class="mute">${pay==='UPI'?'Pay using your UPI app. The shop confirms receipt at pickup.':'Pay in cash when you collect your order.'}</p><div class="err">${esc(msg)}</div><button class="btn full" data-a="place" ${busy?'disabled':''}>${busy?'Placing…':'Place order'}</button><button class="btn g full" style="margin-top:8px" data-a="back">Back to shop</button></div>`}
+function done(){let o=last,upi=config.upi&&o.pay==='UPI'?`upi://pay?pa=${encodeURIComponent(config.upi)}&pn=${encodeURIComponent(config.name)}&am=${o.total}&cu=INR&tn=${encodeURIComponent('Order '+o.id)}`:'',wa=config.wa?`https://wa.me/91${config.wa}?text=${encodeURIComponent(`New order ${o.id}\nName: ${o.name}\nMobile: ${o.mob}\n${o.items.map(x=>x.n+' x '+x.q).join('\n')}\nTotal: ${inr(o.total)} (${o.pay})\nPickup code: ${o.code}`)}`:'';return `<div class="wrap">${header()}<div class="card"><h2>Order placed</h2><p>Order <b>${esc(o.id)}</b> for ${inr(o.total)}. Show this code at the counter.</p><div class="code">${esc(o.code)}</div></div><div class="card">${wa?`<a class="btn b2 full" href="${esc(wa)}" target="_blank" rel="noopener">Send order to shop on WhatsApp</a>`:'<p class="mute">Show your order number and pickup code at the counter.</p>'}${upi?`<a class="btn full" style="margin-top:8px" href="${esc(upi)}">Pay ${inr(o.total)} with UPI</a>`:o.pay==='UPI'?'<p class="mute">Pay at the counter; shop has not configured a UPI ID.</p>':'<p>Pay in cash when you collect.</p>'}<button class="btn g full" style="margin-top:8px" data-a="again">Start a new order</button></div></div>`}
+function render(){app.innerHTML=({welcome,shop,pay:payment,done})[view]();}
+async function placeOrder(){if(busy||!lines().length)return;busy=true;msg='';render();try{for(const x of lines())if(x.q>x.p.s)throw new Error(`${x.p.n} has only ${x.p.s} left.`);const ref=db.ref('orders').push(),now=Date.now(),o={id:'R'+now.toString(36).slice(-5).toUpperCase(),t:now,name:customer.n,mob:customer.m,items:lines().map(x=>({id:x.p.id,n:x.p.n,p:x.p.p,q:x.q})),total:total(),pay,paid:false,st:'New',code:String(1000+Math.floor(Math.random()*9000)),stockDeducted:false};await ref.set(o);last=o;cart={};view='done';}catch(e){msg=e.message||'Could not place order. Please try again.';view='pay'}finally{busy=false;render()}}
+document.addEventListener('click',async e=>{let b=e.target.closest('[data-a]');if(!b)return;let a=b.dataset.a,id=b.dataset.id;switch(a){case'start':{let n=$('#nm').value.trim().replace(/\s+/g,' '),m=cleanMob($('#mb').value),er=$('#er');if(!okName(n)){er.textContent='Enter a valid name.';return}if(!okMob(m)){er.textContent='Enter a valid 10-digit mobile number.';return}customer={n,m};view='shop';render();break}case'inc':{let p=products.find(x=>String(x.id)===id);if(p&&(cart[id]||0)<Math.min(p.s,10))cart[id]=(cart[id]||0)+1;render();break}case'dec':if(cart[id]>0)cart[id]--;render();break;case'review':view='pay';msg='';render();break;case'back':view='shop';render();break;case'place':await placeOrder();break;case'again':last=null;customer=null;view='welcome';render();break}});
+document.addEventListener('change',e=>{if(e.target.name==='pm'){pay=e.target.value;render()}});document.addEventListener('input',e=>{if(e.target.id==='sq'){let pos=e.target.selectionStart;query=e.target.value;render();$('#sq').focus();$('#sq').setSelectionRange(pos,pos)}});
+try{if(firebaseConfig.apiKey==='PASTE_API_KEY'||firebaseConfig.projectId==='YOUR_PROJECT')throw Error('Firebase configuration has not been added yet.');firebase.initializeApp(firebaseConfig);auth=firebase.auth();db=firebase.database();auth.signInAnonymously().then(()=>{db.ref('products').on('value',s=>{let v=s.val()||{};products=Object.values(v).sort((a,b)=>a.id-b.id);if(view==='shop')render()});db.ref('config/public').on('value',s=>{config={...config,...(s.val()||{})};render()});}).catch(e=>fail('Firebase sign-in failed: '+e.message));}catch(e){fail(e.message)}
+})();
+</script></body></html>
